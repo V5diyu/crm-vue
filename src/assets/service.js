@@ -4,7 +4,8 @@ export default{
         return t.baseURL.trim() + t[u.trim()];
     },
     // baseURL: "http://twelve.ylyedu.com",
-    baseURL: "",
+    //baseURL: "",
+    baseURL: "http://localhost:8009/",
 
     // 管理员相关
     login: "/admin/admin_user/login",
@@ -89,4 +90,7 @@ export default{
 
     // qiniu
     qiniu: "/api/tools/getToken",
+
+    //自动同步日志
+    getSynLog:"/admin/auto_syn_log/get",
 }

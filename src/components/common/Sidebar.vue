@@ -36,6 +36,9 @@
                 <el-menu-item index="manager">
                     <i class="iconfont icon-admin"></i>账号管理
                 </el-menu-item>
+                <el-menu-item index="autosyn">
+                    <i class="iconfont icon-log"></i>同步日志
+                </el-menu-item>
             </div>
 
             <!-- 销售助理权限 -->
@@ -49,12 +52,18 @@
                 <el-menu-item index="agent">
                     <i class="iconfont icon-dailishang"></i>代理商管理
                 </el-menu-item>
+                <el-menu-item index="autosyn">
+                    <i class="iconfont icon-admin"></i>同步日志
+                </el-menu-item>
             </div>
 
             <!-- 财务权限 -->
             <div v-if="setUp == 3">
                 <el-menu-item index="order">
                     <i class="iconfont icon-gongzuotai"></i>订单信息
+                </el-menu-item>
+                <el-menu-item index="autosyn">
+                    <i class="iconfont icon-admin"></i>同步日志
                 </el-menu-item>
             </div>
 
@@ -87,6 +96,9 @@
                 <el-menu-item index="saleRecord">
                     <i class="iconfont icon-chanpin"></i>沟通记录
                 </el-menu-item>
+                <el-menu-item index="autosyn">
+                    <i class="iconfont icon-log"></i>同步日志
+                </el-menu-item>
             </div>
             
         </el-menu>
@@ -102,6 +114,7 @@
             }
         },
         created(){
+            //console.log(JSON.parse(localStorage.getItem('userInfo')));
             let userInfo = localStorage.getItem('userInfo') && JSON.parse(localStorage.getItem('userInfo'));
             this.setUp = userInfo.setUp;
         },

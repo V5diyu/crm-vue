@@ -66,6 +66,10 @@ export default new Router({
                     component: resolve => require(['../components/page/manager.vue'], resolve)
                 },
                 {
+                    path: '/autosyn',
+                    component: resolve => require(['../components/page/autosyn.vue'], resolve)
+                },
+                {
                     path: '/customer-contact',
                     component: resolve => require(['../components/page/customer-contact.vue'], resolve)
                 },
