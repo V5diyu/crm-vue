@@ -79,7 +79,7 @@
             <el-button type="success" style="float:right;margin-right: 20px;" @click="exportExel">导出</el-button>
         </div>
 
-        <el-table :data="tableData" v-loading.body="loading" border style="width: 100%">
+        <el-table :data="tableData" v-loading.body="loading" border style="width: 120%">
             <el-table-column prop="A_hth" label="合同号"></el-table-column>
             <el-table-column prop="B_htqyrq" label="合同签约日期"></el-table-column>
             <!-- <el-table-column prop="C_ssxm" label="所属项目"></el-table-column> -->
@@ -90,6 +90,12 @@
             <el-table-column prop="H_fhbl" label="发货比例"></el-table-column>
             <!-- <el-table-column prop="I_fp" label="发票"></el-table-column> -->
             <el-table-column prop="J_fkje" label="付款金额"></el-table-column>
+            <el-table-column prop="" label="付款明细" width="90">
+                <template scope="scope">
+                    <el-button size="small" type="success"
+                        @click="payDetail(scope.$index, scope.row.A_hth)">查看</el-button>
+                </template>
+            </el-table-column>
             <el-table-column prop="K_fkbl" label="付款比例"></el-table-column>
             <!-- <el-table-column prop="L_fkxq" label="付款详情"></el-table-column> -->
             <el-table-column prop="M_qkje" label="欠款金额"></el-table-column>
@@ -123,7 +129,13 @@
                 :page-size="pageSize">
             </el-pagination>
         </div>
-
+        <el-dialog title="付款明细信息" v-model="payDetailVisible">
+            <el-table :data="payDetailData"  v-loading.body="loading" border label-width="120px">
+                <el-table-column prop="" label="合同号"></el-table-column>
+                <el-table-column prop="" label="付款金额"></el-table-column>
+                <el-table-column prop="" label="付款时间"></el-table-column>
+            </el-table>
+        </el-dialog>
         <el-dialog title="修改订单信息" v-model="dialogVisible">
             <el-form ref="form" :model="form" label-width="120px">
 
@@ -199,6 +211,7 @@
                 endTime: '',
                 keyword: '',
                 tableData: [],
+                payDetailData: [],
                 loading: true,
                 cur_page: 1,
                 count: 0,
@@ -208,6 +221,7 @@
                 uploadExcelLinkThree: service.url('uploadOrderThree'),
                 uploadExcelLink: service.url('uploadOrder'),
                 dialogVisible: false,
+                payDetailVisible: false,
                 form: {
                     A_hth: '',
                     B_htqyrq: '',
@@ -303,6 +317,17 @@
                         this.dialogVisible = false;
                     }
                 })
+            },
+            payDetail(index,row) {
+                //console.log(index);
+                //console.log(row);
+                this.$axios.post('getPayDetail', row, (res) => {
+                    if (res.ret == true) {
+                        this.payDetailData = res.data;
+                    }
+                });
+                this.payDetailVisible = true;
+                this.payDetailData = [];
             }
         }
     }

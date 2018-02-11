@@ -93,4 +93,7 @@ export default{
 
     //自动同步日志
     getSynLog:"/admin/auto_syn_log/get",
+
+    //付款明细(订单页面查看弹窗)
+    getPayDetail:"/admin/order_pay_detail/get",
 }
