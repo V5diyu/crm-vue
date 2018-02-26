@@ -9,11 +9,34 @@
         </div>
 
         <div class="crumbs">
-            <el-row>
-                <el-col :span="24">
-                    <!--<el-button type="primary" style="float:right;" @click="addDialog">新增管理员</el-button>-->
-                </el-col>
-            </el-row>
+            <el-form :inline="true" style="float: left;">
+                <el-form-item>
+                    <el-input
+                            class="inline"
+                            placeholder="请输入合同号搜索"
+                            icon="search"
+                            v-model="keyword"
+                            @keyup.enter.native="getData"
+                            :on-icon-click="getData">
+                    </el-input>
+                </el-form-item>
+
+                <el-date-picker
+                        v-model="startTime"
+                        type="date"
+                        placeholder="开始日期"
+                        @change="getData"
+                        :picker-options="pickerOptions0">
+                </el-date-picker>
+
+                <el-date-picker
+                        v-model="endTime"
+                        type="date"
+                        placeholder="结束日期"
+                        @change="getData"
+                        :picker-options="pickerOptions0">
+                </el-date-picker>
+            </el-form>
         </div>
 
         <el-table :data="tableData" v-loading.body="loading" border style="width: 100%">
@@ -37,7 +60,6 @@
                     :page-size="pageSize">
             </el-pagination>
         </div>
-
         <!--<el-dialog :title="addDialogTitle" v-model="addDialogVisible">
             <el-form ref="form" :model="form" label-width="80px">
 
@@ -80,9 +102,10 @@
                 cur_page: 1,
                 count: 0,
                 pageSize: 15,
+                keyword:'',
+                startTime: '',
+                endTime: '',
                 qiniuInitState: false,
-                addDialogVisible: false,
-                addDialogTitle: '添加管理员',
                 loading: true,
                 form: {
                     name: '',
@@ -96,16 +119,35 @@
             this.getData();
         },
         methods: {
+            pickerOptions0: {
+                disabledDate(time) {
+                    return time.getTime() < Date.now() - 8.64e7;
+                }
+            },
             handleCurrentChange(val){
                 this.cur_page = val;
                 this.getData();
             },
             getData(){
                 this.loading = true;
+
+                if (this.startTime.toString().indexOf('T') != -1) {
+                    this.startTime = +new Date(this.startTime);
+                    /*console.log(this.startTime);*/
+                }
+
+                if (this.endTime.toString().indexOf('T') != -1) {
+                    this.endTime = +new Date(this.endTime);
+                }
+
                 this.$axios.post('getSynLog', {
-                    pn: this.cur_page
+                    pn: this.cur_page,
+                    search: this.keyword,
+                    startTime: this.startTime,
+                    endTime: this.endTime
                 }, (res) => {
                     if (res.ret == true) {
+                        //console.log(res.data);
                         this.tableData = res.data.list;
                         this.count = res.data.count;
                         this.loading = false

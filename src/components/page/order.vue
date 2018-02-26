@@ -131,9 +131,9 @@
         </div>
         <el-dialog title="付款明细信息" v-model="payDetailVisible">
             <el-table :data="payDetailData"  v-loading.body="loading" border label-width="120px">
-                <el-table-column prop="" label="合同号"></el-table-column>
-                <el-table-column prop="" label="付款金额"></el-table-column>
-                <el-table-column prop="" label="付款时间"></el-table-column>
+                <el-table-column prop="contract" label="合同号"></el-table-column>
+                <el-table-column prop="payment" label="付款金额"></el-table-column>
+                <el-table-column prop="paydate" label="付款时间"></el-table-column>
             </el-table>
         </el-dialog>
         <el-dialog title="修改订单信息" v-model="dialogVisible">
@@ -268,9 +268,9 @@
             },
             getData(){
                 this.loading = true;
-
                 if (this.startTime.toString().indexOf('T') != -1) {
                     this.startTime = +new Date(this.startTime);
+                    /*console.log(this.startTime);*/
                 }
 
                 if (this.endTime.toString().indexOf('T') != -1) {
@@ -284,7 +284,9 @@
                     endTime: this.endTime
                 }, (res) => {
                     if (res.ret == true) {
+                        //console.log(res.data);
                         this.tableData = res.data.list;
+                        //console.log(this.tableData);
                         this.count = res.data.count;
                         this.loading = false
                     }
@@ -306,6 +308,7 @@
                 })
             },
             editModal(index, row){
+                //console.log(row);
                 this.dialogVisible = true;
                 this.form = JSON.parse(JSON.stringify(row));
             },
@@ -321,13 +324,14 @@
             payDetail(index,row) {
                 //console.log(index);
                 //console.log(row);
-                this.$axios.post('getPayDetail', row, (res) => {
+                this.$axios.post('getPayDetail', {'row':row}, (res) => {
                     if (res.ret == true) {
+                        console.log(res);
                         this.payDetailData = res.data;
                     }
                 });
+                //console.log(this.payDetailData);
                 this.payDetailVisible = true;
-                this.payDetailData = [];
             }
         }
     }

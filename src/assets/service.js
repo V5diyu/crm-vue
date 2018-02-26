@@ -4,8 +4,9 @@ export default{
         return t.baseURL.trim() + t[u.trim()];
     },
     // baseURL: "http://twelve.ylyedu.com",
-    //baseURL: "",
-    baseURL: "http://localhost:8009/",
+    baseURL: "",
+    //baseURL: "127.0.0.1:8009/",
+    //baseURL: "http://localhost:8009/",
 
     // 管理员相关
     login: "/admin/admin_user/login",
@@ -34,7 +35,7 @@ export default{
     uploadOrderTwo: "/admin/order_info/uploadTwo",
     uploadOrderThree: "/admin/order_info/uploadThree",
     getOrderInfo: "/admin/order_info/get",
-    updateOrderInfo: "/admin/order_info/update",
+    updateOrderInfo: "/admin/order_info/updatfoe",
     delOrderInfo: "/admin/order_info/delete",
     downfileOrder: "/admin/order_info/downfile",
 
