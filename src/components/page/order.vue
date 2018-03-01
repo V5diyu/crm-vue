@@ -322,15 +322,15 @@
                 })
             },
             payDetail(index,row) {
-                //console.log(index);
-                //console.log(row);
+
                 this.$axios.post('getPayDetail', {'row':row}, (res) => {
                     if (res.ret == true) {
-                        console.log(res);
+                        /*console.log(res);*/
+                        /*console.log(res.data);*/
                         this.payDetailData = res.data;
                     }
                 });
-                //console.log(this.payDetailData);
+                /*console.log(this.payDetailData);*/
                 this.payDetailVisible = true;
             }
         }

@@ -39,6 +39,8 @@
             </el-form>
         </div>
 
+        <el-button type="success" style="float:right;margin-right:20px;" @click="exportExel">导出</el-button>
+
         <el-table :data="tableData" v-loading.body="loading" border style="width: 100%">
             <el-table-column prop="syn_time" label="同步时间" width="170"></el-table-column>
             <el-table-column prop="syn_cont" label="数据表" width="95"></el-table-column>
@@ -95,6 +97,7 @@
 </template>
 
 <script>
+    import service from '../../assets/service.js'
     export default {
         data() {
             return {
@@ -153,6 +156,10 @@
                         this.loading = false
                     }
                 })
+            },
+            exportExel(index, row) {
+                location.href = service.url('downfileSyn') + '?search=' + this.keyword + '&startTime=' + this.startTime + '&endTime=' + this.endTime;
+                /*console.log(service.url('downfileSyn') + '?search=' + this.keyword + '&startTime=' + this.startTime + '&endTime=' + this.endTime);*/
             }
         }
     }
