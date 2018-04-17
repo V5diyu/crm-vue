@@ -23,6 +23,14 @@
         </div>
 
         <el-table :data="tableData" v-loading.body="loading" border style="width: 100%">
+            <el-table-column v-if="setUp != 4" label="操作" width="135">
+                <template scope="scope">
+                    <el-button size="small" type="success"
+                               @click="editModal(scope.$index, scope.row)">修改</el-button>
+                    <el-button size="small" type="danger"
+                               @click="del(scope.$index, scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
             <el-table-column prop="A_khmc" label="客户名称"></el-table-column>
             <el-table-column prop="B_ywy" label="业务员"></el-table-column>
             <el-table-column prop="C_gcah" label="工程案号"></el-table-column>
@@ -46,14 +54,7 @@
                 </template>
             </el-table-column> -->
            
-            <el-table-column v-if="setUp != 4" label="操作" width="180">
-                <template scope="scope">
-                    <el-button size="small" type="success"
-                        @click="editModal(scope.$index, scope.row)">修改</el-button>
-                    <el-button size="small" type="danger"
-                        @click="del(scope.$index, scope.row)">删除</el-button>
-                </template>
-            </el-table-column>
+
         </el-table>
 
         <div class="pagination">
@@ -93,7 +94,13 @@
                     <el-input v-model="form.H_dw" placeholder="请输入单位"></el-input>
                 </el-form-item>
                 <el-form-item label="出库日期">
-                    <el-input v-model="form.I_ckrq" placeholder="请输入出库日期"></el-input>
+                    <el-date-picker
+                            v-model="form.I_ckrq"
+                            type="date"
+                            placeholder="出库日期"
+                            @change="modifyCK"
+                            :picker-options="pickerOptions0">
+                    </el-date-picker>
                 </el-form-item>
                 <el-form-item label="数量">
                     <el-input v-model="form.J_sl" placeholder="请输入数量"></el-input>
@@ -108,7 +115,13 @@
                     <el-input v-model="form.M_shrmc" placeholder="请输入审核人名称"></el-input>
                 </el-form-item>
                 <el-form-item label="预计发货日期">
-                    <el-input v-model="form.N_yjfhrq" placeholder="请输入预计发货日期"></el-input>
+                    <el-date-picker
+                            v-model="form.N_yjfhrq"
+                            type="date"
+                            placeholder="预计发货日期"
+                            @change="modifyFH"
+                            :picker-options="pickerOptions0">
+                    </el-date-picker>
                 </el-form-item>
                 <el-form-item label="备注">
                     <el-input v-model="form.O_bz" placeholder="请输入备注"></el-input>
@@ -163,6 +176,39 @@
             this.setUp = userInfo.setUp;
         },
         methods: {
+            modifyCK : function () {
+                var now = this.form.I_ckrq;
+                var year = now.getFullYear();
+                var month =(now.getMonth() + 1).toString();
+                var day = (now.getDate()).toString();
+                if (month.length == 1) {
+                    month = "0" + month;
+                }
+                if (day.length == 1) {
+                    day = "0" + day;
+                }
+                var dateTime = year +"-"+ month +"-"+  day;
+                this.form.I_ckrq = dateTime;
+            },
+            modifyFH : function () {
+                var now = this.form.N_yjfhrq;
+                var year = now.getFullYear();
+                var month =(now.getMonth() + 1).toString();
+                var day = (now.getDate()).toString();
+                if (month.length == 1) {
+                    month = "0" + month;
+                }
+                if (day.length == 1) {
+                    day = "0" + day;
+                }
+                var dateTime = year +"-"+ month +"-"+  day;
+                this.form.N_yjfhrq = dateTime;
+            },
+            pickerOptions0: {
+                disabledDate(time) {
+                    return time.getTime() < Date.now() - 8.64e7;
+                }
+            },
             errorList(index, row){
                 this.$router.push({ path: 'errorList', query: { id: row.id, page: '产品交期表' }})
             },

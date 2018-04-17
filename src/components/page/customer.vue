@@ -29,6 +29,22 @@
                         :action="uploadExcelLink2">
                         <el-button type="primary">导入厂家客户</el-button>
                     </el-upload>
+                    <el-upload
+                            v-show="type == 3"
+                            style="float: right;"
+                            :on-success="uploadExcelSuccess"
+                            :show-file-list="false"
+                            :action="uploadExcelLink3">
+                        <el-button type="primary">导入代理商</el-button>
+                    </el-upload>
+                    <el-upload
+                            v-show="type == 4"
+                            style="float: right;"
+                            :on-success="uploadExcelSuccess"
+                            :show-file-list="false"
+                            :action="uploadExcelLink4">
+                        <el-button type="primary">导入代理人</el-button>
+                    </el-upload>
                     <el-button type="success" style="float:right;margin-right: 20px;" @click="downloadTemplate">下载导入模板</el-button>
                     <el-form :inline="true">
                         <el-form-item>
@@ -45,6 +61,8 @@
                         <el-radio-group v-model="type">
                             <el-radio-button label="1">终端</el-radio-button>
                             <el-radio-button label="2">厂家</el-radio-button>
+                            <el-radio-button label="3">代理商</el-radio-button>
+                            <el-radio-button label="4">代理人</el-radio-button>
                         </el-radio-group>
                     </el-form>
                 </el-col>
@@ -65,8 +83,8 @@
             </el-table-column>
             <!-- <el-table-column prop="province" label="省份"></el-table-column> -->
             <!-- <el-table-column prop="city" label="城市"></el-table-column> -->
-            <el-table-column prop="address" label="地址"></el-table-column>
-            <el-table-column prop="intermediaryCompany" label="中间公司"></el-table-column>
+            <!--<el-table-column prop="address" label="地址"></el-table-column>-->
+            <!--<el-table-column prop="intermediaryCompany" label="中间公司"></el-table-column>-->
             <el-table-column prop="stage" label="客户阶段"></el-table-column>
             <el-table-column prop="explain" label="其他情况说明"></el-table-column>
             <el-table-column label="操作" width="220">
@@ -85,13 +103,14 @@
             <el-table-column prop="name" label="客户名称"></el-table-column>
             <el-table-column
                 prop="type"
-                label="客户类型">
+                label="类型">
                 <template scope="scope">
                     <el-tag
                         :type="scope.row.type == 1 ? 'primary' : 'success'"
                         close-transition>{{scope.row.type == 1 ? '终端' : '厂家'}}</el-tag>
                 </template>
             </el-table-column>
+
             <el-table-column prop="explain" label="其他情况说明"></el-table-column>
             <el-table-column label="操作" width="220">
                 <template scope="scope">
@@ -104,6 +123,56 @@
                 </template>
             </el-table-column>
         </el-table>
+
+        <el-table v-show="type == 3" :data="tableData" v-loading.body="loading" border style="width: 100%">
+            <el-table-column prop="name" label="客户名称"></el-table-column>
+            <el-table-column
+                    prop="type"
+                    label="类型">
+                <template scope="scope">
+                    <el-tag
+                            :type="scope.row.type == 3 ? 'primary' : 'success'"
+                            close-transition>{{scope.row.type == 1 ? '代理商' : '代理人'}}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column prop="explain" label="其他情况说明"></el-table-column>
+            <el-table-column label="操作" width="220">
+                <template scope="scope">
+                    <el-button size="small" type="warning"
+                               @click="edit(scope.$index, scope.row)">修改</el-button>
+                    <el-button size="small" type="danger"
+                               @click="del(scope.$index, scope.row)">删除</el-button>
+                    <el-button size="small" type="info" v-if="scope.row.applyNum > 0"
+                               @click="del(scope.$index, scope.row)">跟进审核</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-table v-show="type == 4" :data="tableData" v-loading.body="loading" border style="width: 100%">
+            <el-table-column prop="name" label="客户名称"></el-table-column>
+            <el-table-column
+                    prop="type"
+                    label="类型">
+                <template scope="scope">
+                    <el-tag
+                            :type="scope.row.type == 3 ? 'primary' : 'success'"
+                            close-transition>{{scope.row.type == 4 ? '终端' : '厂家'}}</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column prop="explain" label="其他情况说明"></el-table-column>
+            <el-table-column label="操作" width="220">
+                <template scope="scope">
+                    <el-button size="small" type="warning"
+                               @click="edit(scope.$index, scope.row)">修改</el-button>
+                    <el-button size="small" type="danger"
+                               @click="del(scope.$index, scope.row)">删除</el-button>
+                    <el-button size="small" type="info" v-if="scope.row.applyNum > 0"
+                               @click="del(scope.$index, scope.row)">跟进审核</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+
 
         <el-dialog title="跟进审核" v-model="addDialogVisible">
             <el-table :data="applyList" border style="width: 100%" @select-all="handleSelectionAll" @select="handleSelectionChange">
@@ -145,6 +214,8 @@
                 pageSize: 15,
                 uploadExcelLink: service.url('uploadExcelCustomer'),
                 uploadExcelLink2: service.url('uploadExcelCustomer2'),
+                uploadExcelLink3: service.url('uploadExcelAgent'),
+                uploadExcelLink4: service.url('uploadExcelAgent2'),
                 applyList: [],
                 curApplyData: {},
                 curApplyIndex: 0,
@@ -165,11 +236,11 @@
                 location.href = service.url('downloadTemplateCustomer') + '?type=' + this.type;
             },
             handleSelectionAll(selection){
-                console.log(selection)
+                //console.log(selection)
                 this.selection = selection;
             },
             handleSelectionChange(selection, row){
-                console.log(selection, row)
+                //console.log(selection, row)
                 this.selection = selection;
             },
             operationConfirm(){
@@ -198,7 +269,7 @@
                     id: row.id
                 }, (res) => {
                     if (res.ret == true) {
-                        console.log(res.data)
+                        //console.log(res.data)
                         this.applyList = res.data;
                     }
                 })

@@ -46,7 +46,7 @@
                         }, (resp) => {
                             if (resp.ret) {
                                 /*console.log(resp);*/
-
+                                
                                 this.$message.success('登陆成功，正在跳转...');
                                 localStorage.setItem('ms_username', self.ruleForm.username);
                                 localStorage.setItem('userInfo', JSON.stringify(resp.data));

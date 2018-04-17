@@ -3,10 +3,12 @@ export default{
         let t = this;
         return t.baseURL.trim() + t[u.trim()];
     },
-    // baseURL: "http://twelve.ylyedu.com",
-    baseURL: "",
+    //baseURL: "http://twelve.ylyedu.com",
+    //baseURL: "",
     //baseURL: "127.0.0.1:8009/",
-    //baseURL: "http://localhost:8009/",
+    //baseURL: "http://www.crm.app",
+    baseURL: "http://localhost/crm/public/",
+    
 
     // 管理员相关
     login: "/admin/admin_user/login",
@@ -35,7 +37,7 @@ export default{
     uploadOrderTwo: "/admin/order_info/uploadTwo",
     uploadOrderThree: "/admin/order_info/uploadThree",
     getOrderInfo: "/admin/order_info/get",
-    updateOrderInfo: "/admin/order_info/updatfoe",
+    updateOrderInfo: "/admin/order_info/update",
     delOrderInfo: "/admin/order_info/delete",
     downfileOrder: "/admin/order_info/downfile",
 
@@ -98,4 +100,14 @@ export default{
 
     //付款明细(订单页面查看弹窗)
     getPayDetail:"/admin/order_pay_detail/get",
+
+    //发票明细(订单页面查看弹窗)
+    getBillDetail:"/admin/bill_detail/get",
+
+    //借用信息
+    getLendData:"/admin/lend/get",
+    updateLendInfo:"/admin/lend/update",
+    delLend:"/admin/lend/delete",
+    downfileLend:"/admin/lend/downfile",
+
 }

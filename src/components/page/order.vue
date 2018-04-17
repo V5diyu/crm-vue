@@ -8,9 +8,7 @@
                 </el-breadcrumb>
             </el-row>
         </div>
-
         <div class="crumbs" style="overflow: hidden;">
-
             <el-form :inline="true" style="float: left;">
                 <el-form-item>
                     <el-input
@@ -80,25 +78,40 @@
         </div>
 
         <el-table :data="tableData" v-loading.body="loading" border style="width: 120%">
+            <el-table-column v-if="setUp != 4" label="操作" width="135">
+                <template scope="scope">
+                    <el-button size="small" type="success"
+                               @click="editModal(scope.$index, scope.row)">修改</el-button>
+                    <el-button size="small" type="danger"
+                               @click="del(scope.$index, scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
             <el-table-column prop="A_hth" label="合同号"></el-table-column>
             <el-table-column prop="B_htqyrq" label="合同签约日期"></el-table-column>
-            <!-- <el-table-column prop="C_ssxm" label="所属项目"></el-table-column> -->
+            <el-table-column prop="T_jqrq" label="订单交期日期"></el-table-column>
             <el-table-column prop="D_khdw" label="客户名称"></el-table-column>
             <el-table-column prop="E_zj" label="总价"></el-table-column>
             <el-table-column prop="F_xsry" label="销售人员"></el-table-column>
-            <el-table-column prop="G_fh" label="发货"></el-table-column>
-            <el-table-column prop="H_fhbl" label="发货比例"></el-table-column>
-            <!-- <el-table-column prop="I_fp" label="发票"></el-table-column> -->
-            <el-table-column prop="J_fkje" label="付款金额"></el-table-column>
-            <el-table-column prop="" label="付款明细" width="90">
+            <el-table-column prop="I_fp" label="发票"></el-table-column>
+            <el-table-column prop="" label="发票明细">
                 <template scope="scope">
                     <el-button size="small" type="success"
-                        @click="payDetail(scope.$index, scope.row.A_hth)">查看</el-button>
+                               @click="BillDetail(scope.$index, scope.row.A_hth)">查看
+                    </el-button>
                 </template>
             </el-table-column>
+            <el-table-column prop="J_fkje" label="付款金额"></el-table-column>
             <el-table-column prop="K_fkbl" label="付款比例"></el-table-column>
-            <!-- <el-table-column prop="L_fkxq" label="付款详情"></el-table-column> -->
+            <el-table-column prop="" label="付款明细">
+                <template scope="scope">
+                    <el-button size="small" type="success"
+                        @click="payDetail(scope.$index, scope.row.A_hth)">查看
+                    </el-button>
+                </template>
+            </el-table-column>
             <el-table-column prop="M_qkje" label="欠款金额"></el-table-column>
+            <el-table-column prop="G_fh" label="发货"></el-table-column>
+            <el-table-column prop="H_fhbl" label="发货比例"></el-table-column>
             <el-table-column prop="N_wkdqr" label="尾款到期日"></el-table-column>
             <!-- <el-table-column prop="O_sfcq" label="是否超期"></el-table-column> -->
             <!-- <el-table-column prop="P_cwhxclyj" label="财务后续处理意见"></el-table-column> -->
@@ -110,15 +123,6 @@
                     <el-tag type="danger" v-if="scope.row.errorStatus > 0">新纠错</el-tag>
                 </template>
             </el-table-column> -->
-           
-            <el-table-column v-if="setUp != 4" label="操作" width="180">
-                <template scope="scope">
-                    <el-button size="small" type="success"
-                        @click="editModal(scope.$index, scope.row)">修改</el-button>
-                    <el-button size="small" type="danger"
-                        @click="del(scope.$index, scope.row)">删除</el-button>
-                </template>
-            </el-table-column>
         </el-table>
 
         <div class="pagination">
@@ -136,14 +140,32 @@
                 <el-table-column prop="paydate" label="付款时间"></el-table-column>
             </el-table>
         </el-dialog>
+
+        <el-dialog title="发票明细信息" v-model="billDetailVisible">
+            <el-table :data="billDetailData"  v-loading.body="loading" border label-width="120px">
+                <el-table-column prop="A_pjhm" label="票据号码"></el-table-column>
+                <el-table-column prop="B_pmje" label="票面金额"></el-table-column>
+                <el-table-column prop="C_kpsj" label="开票时间"></el-table-column>
+            </el-table>
+        </el-dialog>
+
         <el-dialog title="修改订单信息" v-model="dialogVisible">
             <el-form ref="form" :model="form" label-width="120px">
 
                 <el-form-item label="合同号">
-                    <el-input v-model="form.A_hth" placeholder="请输入合同号"></el-input>
+                    <el-input v-model="form.A_hth" placeholder="请输入合同号" readonly disabled></el-input>
                 </el-form-item>
                 <el-form-item label="合同签约日期">
-                    <el-input v-model="form.B_htqyrq" placeholder="请输入合同签约日期"></el-input>
+                    <el-input v-model="form.B_htqyrq" placeholder="请输入合同签约日期" readonly disabled></el-input>
+                </el-form-item>
+                <el-form-item label="订单交期日期">
+                    <el-date-picker
+                            v-model="form.T_jqrq"
+                            type="date"
+                            placeholder="订单交期日期"
+                            @change="modifyPro"
+                            :picker-options="pickerOptions0">
+                    </el-date-picker>
                 </el-form-item>
                 <el-form-item label="所属项目">
                     <el-input v-model="form.C_ssxm" placeholder="请输入所属项目"></el-input>
@@ -155,7 +177,7 @@
                     <el-input v-model="form.E_zj" placeholder="请输入总价"></el-input>
                 </el-form-item>
                 <el-form-item label="销售人员">
-                    <el-input v-model="form.F_xsry" placeholder="请输入销售人员"></el-input>
+                    <el-input v-model="form.F_xsry" placeholder="请输入销售人员" readonly disabled></el-input>
                 </el-form-item>
                 <el-form-item label="发货">
                     <el-input v-model="form.G_fh" placeholder="请输入发货"></el-input>
@@ -170,7 +192,7 @@
                     <el-input v-model="form.J_fkje" placeholder="请输入付款金额"></el-input>
                 </el-form-item>
                 <el-form-item label="付款比例">
-                    <el-input v-model="form.K_fkbl" placeholder="请输入付款比例"></el-input>
+                    <el-input v-model="form.K_fkbl" placeholder="请输入付款比例" readonly disabled></el-input>
                 </el-form-item>
                 <el-form-item label="付款详情">
                     <el-input v-model="form.L_fkxq" placeholder="请输入付款详情"></el-input>
@@ -178,9 +200,17 @@
                 <el-form-item label="欠款金额">
                     <el-input v-model="form.M_qkje" placeholder="请输入欠款金额"></el-input>
                 </el-form-item>
+
                 <el-form-item label="尾款到期日">
-                    <el-input v-model="form.N_wkdqr" placeholder="请输入尾款到期日"></el-input>
+                    <el-date-picker
+                            v-model="form.N_wkdqr"
+                            type="date"
+                            placeholder="尾款到期日"
+                            @change="modifyWK"
+                            :picker-options="pickerOptions0">
+                    </el-date-picker>
                 </el-form-item>
+
                 <el-form-item label="是否超期">
                     <el-input v-model="form.O_sfcq" placeholder="请输入是否超期"></el-input>
                 </el-form-item>
@@ -212,6 +242,7 @@
                 keyword: '',
                 tableData: [],
                 payDetailData: [],
+                billDetailData: [],
                 loading: true,
                 cur_page: 1,
                 count: 0,
@@ -222,6 +253,7 @@
                 uploadExcelLink: service.url('uploadOrder'),
                 dialogVisible: false,
                 payDetailVisible: false,
+                billDetailVisible:false,
                 form: {
                     A_hth: '',
                     B_htqyrq: '',
@@ -240,6 +272,7 @@
                     O_sfcq: '',
                     P_cwhxclyj: '',
                     Q_xsclfk: '',
+                    T_jqrq: '',
                 },
                 setUp: 0, //1：管理人员 2：销售助理 3:财务 4：销售人员
             }
@@ -255,11 +288,39 @@
                     return time.getTime() < Date.now() - 8.64e7;
                 }
             },
+            modifyPro : function () {
+                var now = this.form.T_jqrq;
+                var year = now.getFullYear();
+                var month =(now.getMonth() + 1).toString();
+                var day = (now.getDate()).toString();
+                if (month.length == 1) {
+                    month = "0" + month;
+                }
+                if (day.length == 1) {
+                    day = "0" + day;
+                }
+                var dateTime = year +"-"+ month +"-"+  day;
+                this.form.T_jqrq = dateTime;
+            },
+            modifyWK : function () {
+                var now = this.form.N_wkdqr;
+                var year = now.getFullYear();
+                var month =(now.getMonth() + 1).toString();
+                var day = (now.getDate()).toString();
+                if (month.length == 1) {
+                    month = "0" + month;
+                }
+                if (day.length == 1) {
+                    day = "0" + day;
+                }
+                var dateTime = year +"-"+ month +"-"+  day;
+                this.form.N_wkdqr = dateTime;
+            },
             errorList(index, row){
                 this.$router.push({ path: 'errorList', query: { id: row.id , page: '订单信息'}})
             },
             uploadExcelSuccess(){
-                this.$message.success('上传成功')
+                this.$message.success('上传成功');
                 this.getData();
             },
             handleCurrentChange(val){
@@ -313,6 +374,7 @@
                 this.form = JSON.parse(JSON.stringify(row));
             },
             edit(){
+                console.log(this.form);
                 this.$axios.post('updateOrderInfo', this.form, (res) => {
                     if (res.ret == true) {
                         this.$message.success('修改成功');
@@ -332,6 +394,16 @@
                 });
                 /*console.log(this.payDetailData);*/
                 this.payDetailVisible = true;
+            },
+            BillDetail(index,row) {
+                this.$axios.post('getBillDetail', {'row':row}, (res) => {
+                    if (res.ret == true) {
+                        /*console.log(res);*/
+                        /*console.log(res.data);*/
+                        this.payDetailData = res.data;
+                    }
+                });
+                this.billDetailVisible = true;
             }
         }
     }

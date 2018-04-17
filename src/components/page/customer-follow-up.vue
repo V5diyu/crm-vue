@@ -27,6 +27,8 @@
                         <el-radio-group v-model="type">
                             <el-radio-button label="1">终端</el-radio-button>
                             <el-radio-button label="2">厂家</el-radio-button>
+                            <el-radio-button label="3">代理商</el-radio-button>
+                            <el-radio-button label="4">代理人</el-radio-button>
                         </el-radio-group>
 
                         <el-button type="success" style="float:right;" @click="downloadTemplate">导出沟通记录</el-button>
@@ -47,8 +49,8 @@
                         close-transition>{{scope.row.type == 1 ? '终端' : '厂家'}}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column prop="address" label="地址"></el-table-column>
-            <el-table-column prop="intermediaryCompany" label="中间公司"></el-table-column>
+            <!--<el-table-column prop="address" label="地址"></el-table-column>-->
+            <!--<el-table-column prop="intermediaryCompany" label="中间公司"></el-table-column>-->
             <el-table-column prop="stage" label="客户阶段"></el-table-column>
             <el-table-column prop="explain" label="其他情况说明"></el-table-column>
             <el-table-column prop="belongUserName" label="跟进销售人员"></el-table-column>
@@ -63,13 +65,56 @@
             <el-table-column prop="name" label="客户名称"></el-table-column>
             <el-table-column
                 prop="type"
-                label="客户类型">
+                label="类型">
                 <template scope="scope">
                     <el-tag
                         :type="scope.row.type == 1 ? 'primary' : 'success'"
                         close-transition>{{scope.row.type == 1 ? '终端' : '厂家'}}</el-tag>
                 </template>
             </el-table-column>
+           <!-- <el-table-column prop="stage" label="客户阶段"></el-table-column>-->
+            <el-table-column prop="explain" label="其他情况说明"></el-table-column>
+            <el-table-column prop="belongUserName" label="跟进销售人员"></el-table-column>
+            <el-table-column label="销售沟通记录">
+                <template scope="scope">
+                    <el-button size="small" type="info" @click="look(scope.$index, scope.row)">查看</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-table v-show="type == 3" :data="tableData" v-loading.body="loading" border style="width: 100%">
+            <el-table-column prop="name" label="客户名称"></el-table-column>
+            <el-table-column
+                    prop="type"
+                    label="类型">
+                <template scope="scope">
+                    <el-tag
+                            :type="scope.row.type == 3 ? 'primary' : 'success'"
+                            close-transition>{{scope.row.type == 3 ? '代理商' : '代理人'}}</el-tag>
+                </template>
+            </el-table-column>
+            <!--<el-table-column prop="stage" label="客户阶段"></el-table-column>-->
+            <el-table-column prop="explain" label="其他情况说明"></el-table-column>
+            <el-table-column prop="belongUserName" label="跟进销售人员"></el-table-column>
+            <el-table-column label="销售沟通记录">
+                <template scope="scope">
+                    <el-button size="small" type="info" @click="look(scope.$index, scope.row)">查看</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-table v-show="type == 4" :data="tableData" v-loading.body="loading" border style="width: 100%">
+            <el-table-column prop="name" label="客户名称"></el-table-column>
+            <el-table-column
+                    prop="type"
+                    label="类型">
+                <template scope="scope">
+                    <el-tag
+                            :type="scope.row.type == 3 ? 'primary' : 'success'"
+                            close-transition>{{scope.row.type == 3 ? '代理商' : '代理人'}}</el-tag>
+                </template>
+            </el-table-column>
+            <!--<el-table-column prop="stage" label="客户阶段"></el-table-column>-->
             <el-table-column prop="explain" label="其他情况说明"></el-table-column>
             <el-table-column prop="belongUserName" label="跟进销售人员"></el-table-column>
             <el-table-column label="销售沟通记录">
@@ -172,6 +217,7 @@
                 }, (res) => {
                     if (res.ret == true) {
                         this.tableData = res.data.list;
+                        //console.log(this.tableData);
                         this.count = res.data.count;
                         this.loading = false
                     }
@@ -186,7 +232,7 @@
                         this.dialogTableVisible = true;
                         this.recordListData = res.data.list;
                         this.recordCount = res.data.count;
-                        console.log(res.data)
+                        //console.log(res.data)
                     }
                 })
             }

@@ -7,6 +7,8 @@
                     <template slot="title"><i class="iconfont icon-gongzuotai"></i>工作台</template>
                     <el-menu-item index="productTime">产品交期表</el-menu-item>
                     <el-menu-item index="order">订单信息</el-menu-item>
+                    <el-menu-item index="lend">借用信息</el-menu-item>
+
                 </el-submenu>
 
                 <el-submenu index="2">
@@ -37,7 +39,7 @@
                     <i class="iconfont icon-admin"></i>账号管理
                 </el-menu-item>
                 <el-menu-item index="autosyn">
-                    <i class="iconfont icon-log"></i>同步日志
+                    <i class="iconfont icon-xiangqing"></i>同步日志
                 </el-menu-item>
             </div>
 
@@ -53,7 +55,7 @@
                     <i class="iconfont icon-dailishang"></i>代理商管理
                 </el-menu-item>
                 <el-menu-item index="autosyn">
-                    <i class="iconfont icon-admin"></i>同步日志
+                    <i class="iconfont icon-xiangqing"></i>同步日志
                 </el-menu-item>
             </div>
 
@@ -63,7 +65,7 @@
                     <i class="iconfont icon-gongzuotai"></i>订单信息
                 </el-menu-item>
                 <el-menu-item index="autosyn">
-                    <i class="iconfont icon-admin"></i>同步日志
+                    <i class="iconfont icon-xiangqing"></i>同步日志
                 </el-menu-item>
             </div>
 
@@ -97,7 +99,7 @@
                     <i class="iconfont icon-chanpin"></i>沟通记录
                 </el-menu-item>
                 <el-menu-item index="autosyn">
-                    <i class="iconfont icon-log"></i>同步日志
+                    <i class="iconfont icon-xiangqing"></i>同步日志
                 </el-menu-item>
             </div>
             

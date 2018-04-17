@@ -25,15 +25,15 @@
                         </el-form-item>
 
                         <el-radio-group v-model="type">
-                            <el-radio-button label="1">代理商</el-radio-button>
-                            <el-radio-button label="2">代理人</el-radio-button>
+                            <el-radio-button label="3">代理商</el-radio-button>
+                            <el-radio-button label="4">代理人</el-radio-button>
                         </el-radio-group>
                     </el-form>
                 </el-col>
             </el-row>
         </div>
 
-        <el-table v-show="type == 1" :data="tableData" v-loading.body="loading" border style="width: 100%">
+        <el-table v-show="type == 3" :data="tableData" v-loading.body="loading" border style="width: 100%">
             <el-table-column prop="name" label="代理商名称"></el-table-column>
             <el-table-column prop="code" label="代理商编码"></el-table-column>
             <el-table-column prop="abbreviation" label="代理商简称"></el-table-column>
@@ -45,7 +45,7 @@
             <el-table-column prop="belongUserName" label="跟进销售人员"></el-table-column>
         </el-table>
 
-        <el-table v-show="type == 2" :data="tableData" v-loading.body="loading" border style="width: 100%">
+        <el-table v-show="type == 4" :data="tableData" v-loading.body="loading" border style="width: 100%">
             <el-table-column prop="name" label="代理商名称"></el-table-column>
             <el-table-column prop="code" label="代理商编码"></el-table-column>
             <el-table-column prop="explain" label="其他情况说明"></el-table-column>
@@ -70,7 +70,7 @@
                 tableData: [],
                 loading: true,
                 keyword: '',
-                type: 1,
+                type: 3,
                 cur_page: 1,
                 count: 0,
                 pageSize: 15,

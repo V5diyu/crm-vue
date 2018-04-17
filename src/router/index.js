@@ -30,6 +30,10 @@ export default new Router({
                     component: resolve => require(['../components/page/invoice.vue'], resolve)
                 },
                 {
+                    path: '/lend',
+                    component: resolve => require(['../components/page/lend.vue'], resolve)
+                },
+                {
                     path: '/customer',
                     component: resolve => require(['../components/page/customer.vue'], resolve)
                 },
